@@ -1,8 +1,35 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:users_page_app/sign_in_page.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  bool isFalseOne = true;
+  bool isFalseTwo = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController1 = TextEditingController();
+  final TextEditingController passwordController2 = TextEditingController();
+
+  Future<void> register() async {
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController1.text.trim(),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('SuccessFully registered')));
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,9 +39,12 @@ class SignUpScreen extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: const Icon(Icons.arrow_back, color: Colors.white,),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
         ),
-        backgroundColor:const Color(0xff0F1E31) ,
+        backgroundColor: const Color(0xff0F1E31),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -59,6 +89,7 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   TextField(
+                    controller: emailController,
                     decoration: InputDecoration(
                       labelText: 'Email',
                       border: OutlineInputBorder(
@@ -68,29 +99,43 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    obscureText: true,
+                    controller: passwordController1,
+                    obscureText: isFalseOne,
                     decoration: InputDecoration(
                       labelText: 'Password',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       suffixIcon: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            isFalseOne = !isFalseOne;
+                          });
+                        },
+                        icon: isFalseOne
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
                       ),
                     ),
                   ),
                   const SizedBox(height: 20),
                   TextField(
-                    obscureText: true,
+                    controller: passwordController2,
+                    obscureText: isFalseTwo,
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       suffixIcon: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            isFalseTwo = !isFalseTwo;
+                          });
+                        },
+                        icon: isFalseTwo
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
                       ),
                     ),
                   ),
@@ -98,7 +143,7 @@ class SignUpScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: register,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,
                         padding: const EdgeInsets.symmetric(vertical: 15),

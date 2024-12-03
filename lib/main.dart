@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:users_page_app/profile_page.dart';
 import 'package:users_page_app/profile_screen.dart';
@@ -9,7 +10,9 @@ import 'package:users_page_app/sign_up_flow/sign_up_flow_2.dart';
 import 'package:users_page_app/sign_up_flow/sign_up_flow_3.dart';
 import 'package:users_page_app/sign_up_page.dart';
 
-void main() {
+void main()async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -19,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: SignUpFlow3(),
+      home: SignInScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
