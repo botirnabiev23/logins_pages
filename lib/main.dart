@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:users_page_app/bloc/auth_bloc.dart';
 import 'package:users_page_app/profile_page.dart';
 import 'package:users_page_app/profile_screen.dart';
 import 'package:users_page_app/sign_in_page.dart';
@@ -10,10 +13,19 @@ import 'package:users_page_app/sign_up_flow/sign_up_flow_2.dart';
 import 'package:users_page_app/sign_up_flow/sign_up_flow_3.dart';
 import 'package:users_page_app/sign_up_page.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => AuthBloc(FirebaseAuth.instance),
+        )
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
